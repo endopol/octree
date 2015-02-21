@@ -25,9 +25,17 @@
 /* #####   constructors   ########################################################### */
 OctreePoint::OctreePoint(){
     index = -1;
+    address = 0;
 
-    for(int i=0; i<NDIM; i++)
-        location[i] = 0;
+    num_points = 0;
+
+    home = NULL;
+    depth = 0;
+}
+
+OctreePoint::OctreePoint(codestring new_address){
+    index = -1;
+    address = new_address;
 
     num_points = 0;
 
@@ -223,12 +231,41 @@ void OctreePoint::computeCovariance(double cov[NDIM][NDIM]){
 
 /* #####   Accesssors   ############################################################# */
 
+codestring OctreePoint::getAddress() const{
+    return address;
+}
+
 vector<OctreePoint*> OctreePoint::getNeighbors() { 
     return neighbors; 
 }
 
 OctreePoint* OctreePoint::getNeighbor(int i) const{
     return neighbors[i];
+}
+
+OctreePoint* searchVector(const vector<OctreePoint*>& v, codestring c){
+    int begin = 0, end = v.size()-1;
+
+    while(end>begin){
+        int curr = (end+begin)/2;
+        if(c <= v[curr]->address)
+            end = curr;
+        if(c >= v[curr]->address)
+            begin = curr;
+    }
+
+    if(c==v[begin]->address)
+        return v[begin];
+    else return NULL;
+}
+
+
+OctreePoint* OctreePoint::getNeighbor(const int relative_coords[NDIM]) const{
+    long new_int_location[NDIM];
+    sum(home->int_location, relative_coords, new_int_location);
+
+    codestring c = locationToCode(new_int_location, home->max_depth);
+    return searchVector(neighbors, c);
 }
 
 int OctreePoint::getIndex() const{

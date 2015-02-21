@@ -127,20 +127,23 @@ class OctreePoint
     friend ostream &operator<<(ostream &out, const OctreePoint &p);
     friend float point_distance(const OctreePoint *p1, const OctreePoint *p2);
     friend vector<double> dist_from(OctreePoint *start, OctreeGraph &graph, vector<int> &previous);
+    friend OctreePoint* searchVector(const vector<OctreePoint*>& v, codestring c);
 public:
     int color[3];
 
     OctreePoint();
-
+    OctreePoint(codestring new_address);
     OctreePoint(const PointIter begin, const PointIter end, Octree *new_home);
+
     ~OctreePoint();
 
     void add(const PointIter begin, const PointIter end);
 
     // Accessor methods
-
+    codestring getAddress() const;
     vector<OctreePoint*> getNeighbors();
     OctreePoint *getNeighbor(int i) const;
+    OctreePoint* getNeighbor(const int relative_coords[3]) const;    
     int getIndex() const;
 
     const double *getLocation() const;

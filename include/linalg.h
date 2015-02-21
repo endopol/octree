@@ -127,6 +127,12 @@ void sub(const T1 v1[NDIM], const T2 v2[NDIM], T3 v3[NDIM]){
         v3[i] = v1[i] - v2[i];
 }
 
+template <typename T1, typename T2, typename T3>
+void sum(const T1 v1[NDIM], const T2 v2[NDIM], T3 v3[NDIM]){
+    for(int i=0; i<NDIM; i++)
+        v3[i] = v1[i] + v2[i];
+}
+
 template <typename T1, typename T2>
 float conjugate(const T1 b[NDIM], const T2 A[NDIM][NDIM]){
     float sum = 0;

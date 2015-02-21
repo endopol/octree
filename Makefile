@@ -1,15 +1,7 @@
-all: lib lib/octree.a lib/pcd_io.o lib/visualize.o
+all: lib lib/octree.a
 
 lib:
 	mkdir lib
-
-lib/pcd_io.o:
-	cd helper && make pcd_io.o
-	mv helper/pcd_io.o lib/pcd_io.o
-
-lib/visualize.o:
-	cd helper && make visualize.o
-	mv helper/visualize.o lib/visualize.o
 
 lib/octree.a: lib/coded_point.o lib/octree_point.o lib/octree.o lib/octree_graph.o
 	cd lib && ar rcs octree.a coded_point.o octree_point.o octree.o octree_graph.o

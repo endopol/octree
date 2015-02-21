@@ -8,8 +8,8 @@
 #include <assert.h>
 #include <cmath>
 #include <sstream>
-#include "pcd_io.cpp"
-#include "visualize.cpp"
+#include "pcd_io.hpp"
+#include "visualize.hpp"
 
 using namespace std;
 
@@ -28,6 +28,7 @@ int main(){
         return -1;
     graph.computeNormals();
 
+    // Color vertices by their normal direction
     for(int i=0; i<graph.getNumVertices(); i++){
         const float* normal = graph.getVertex(i)->getNormal();
         int* color = graph.getVertex(i)->color;
