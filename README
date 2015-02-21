@@ -1,0 +1,7 @@
+to get meshlab
+%: sudo aptitude install meshlab
+
+to run example code
+%: cd example
+%: make
+%: ./octree
