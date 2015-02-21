@@ -1,4 +1,7 @@
-all: lib/octree.a lib/pcd_io.o lib/visualize.o
+all: lib lib/octree.a lib/pcd_io.o lib/visualize.o
+
+lib:
+	mkdir lib
 
 lib/pcd_io.o:
 	cd helper && make pcd_io.o
