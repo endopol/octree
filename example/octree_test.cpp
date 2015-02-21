@@ -28,6 +28,13 @@ int main(){
         return -1;
     graph.computeNormals();
 
+    for(int i=0; i<graph.getNumVertices(); i++){
+        const float* normal = graph.getVertex(i)->getNormal();
+        int* color = graph.getVertex(i)->color;
+        for(int j=0; j<3; j++)
+            color[j] = (int) 255*normal[j];
+    }
+
     /** VIEW OUTPUTS **/
     vector<string> outputFiles;
     const char *outFile = "outfile.ply";
