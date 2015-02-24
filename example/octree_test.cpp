@@ -8,8 +8,8 @@
 #include <assert.h>
 #include <cmath>
 #include <sstream>
-#include "pcd_io.hpp"
-#include "visualize.hpp"
+#include "pcd_io.h"
+#include "visualize.h"
 
 using namespace std;
 
