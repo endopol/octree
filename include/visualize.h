@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <fstream>
 
-
 const double colours[12][3] =
 {
     {  1,   0,   0},
@@ -28,20 +27,16 @@ void rainbow(float r, unsigned int *color);
 // ######################################################################
 void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
 {
+    init_viz(); // get parameters from config file
+
     cout << "saving image " << imnum << " at " << outfile << endl;
     fstream out(outfile, fstream::out);
 
-    enum edgetype {NONE, NORMALS, GRAPH};
-    edgetype edges = NORMALS;
-
-    enum loctype {AVERAGE, NOMINAL};
-    loctype loc = AVERAGE;
-
     int n_copies = 1;
-    if (edges > 0)
+    if (edgetype > 0)
         n_copies = 3;
     int point_mult = n_copies;
-    if (edges == NORMALS)
+    if (edgetype == NORMALS)
         point_mult--;
 
     out << "ply" << endl;
@@ -56,13 +51,13 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
     out << "property uchar green" << endl;
     out << "property uchar blue" << endl;
 
-    if (edges == GRAPH)
+    if (edgetype == GRAPH)
         out << "element face " << graph.getNumEdges() << endl;
 
-    if (edges == NORMALS)
+    if (edgetype == NORMALS)
         out << "element face " << graph.getNumVertices() << endl;
 
-    if (edges > 0)
+    if (edgetype > 0)
         out << "property list uchar int vertex_index " << endl;
 
     out << "end_header" << endl;
@@ -76,9 +71,9 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
             out << setprecision(prec) << fixed;
 
             const double *location;
-            if (loc == NOMINAL)
+            if (loctype == NOMINAL)
                 location = vertices[i]->getNomLocation();
-            if (loc == AVERAGE)
+            if (loctype == AVERAGE)
                 location = vertices[i]->getLocation();
 
                            // coordinates
@@ -92,7 +87,7 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
             out << endl;
         }
     // normal vectors
-    if (edges == NORMALS)
+    if (edgetype == NORMALS)
     {
         double normal_length = 0;
         if(vertices.size()>0) 
@@ -102,9 +97,9 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
         for (unsigned int i = 0; i < vertices.size(); i++)
         {
             const double *location;
-            if (loc == NOMINAL)
+            if (loctype == NOMINAL)
                 location = vertices[i]->getNomLocation();
-            if (loc == AVERAGE)
+            else // (loctype == AVERAGE)
                 location = vertices[i]->getLocation();
 
             for (int j = 0; j < 3; j++)
@@ -112,7 +107,7 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
                 if (isnan((float) vertices[i]->getNormal()[j]))
                     out << location[j] << " ";
                 else
-                    out << (float) location[j] + normal_length * vertices[i]->getNormal()[j] << " ";
+                    out << (double) location[j] + normal_length * vertices[i]->getNormal()[j] << " ";
             }
 
             for (int j = 0; j < 3; j++)        
@@ -135,7 +130,7 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
 
     int num_points = graph.getNumVertices();
     // edges
-    if (edges == GRAPH)
+    if (edgetype == GRAPH)
     {
         vector<OctreeEdge *> edges = graph.getEdges();
         for (unsigned int i = 0; i < edges.size(); i++)

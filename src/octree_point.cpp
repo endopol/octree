@@ -179,9 +179,9 @@ void OctreePoint::computeNormal(){
         l_mat[i][i] -= e1;
 
     double v2[NDIM] = {0, 0, 1};
-    lanczos(l_mat, v2, 40);
+    lanczos(l_mat, v2, 10);
 
-    scale(v2, 1/norm2(v2));
+    scale(v2, 1/sqrt(norm2(v2)));
     copyTo(v2, normal);
 
     // cout << "\t" << normal[0] << " " << normal[1] << " " << normal[2] << endl << endl;
@@ -192,8 +192,6 @@ void OctreePoint::computeNormal(){
  * Description:
  *--------------------------------------------------------------------------------------
  */
-
-const double COVAR_SIGMA = 50;
 void OctreePoint::computeCovariance(double cov[NDIM][NDIM]){
     double sigma = COVAR_SIGMA/((double)(1<<depth));
 

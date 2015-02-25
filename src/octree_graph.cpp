@@ -88,13 +88,6 @@ void OctreeGraph::addEdge(OctreePoint *p1, OctreePoint *p2)
 }
 
 
-void OctreeGraph::reserve(int new_capacity)
-{
-    vertices.reserve(new_capacity);
-    edges.reserve(new_capacity * EDGES_PER_VERTEX);
-}
-
-
 // Traverse cloud and flip normals to point in consistent directions
 void OctreeGraph::fixNormals(OctreePoint *start, vector<float> &total_turn)
 {

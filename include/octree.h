@@ -31,18 +31,8 @@ using namespace std;
 
 /* #####   EXPORTED MACROS   ######################################################## */
 
-#define NDIM 3 /* = # of dimensions */
-#define FOOT 3 /* Radius of footprint */
-#define DIAM 7 /* 1+2*FOOT */
-
-#if NDIM == 2
-#define NDIV 4 /* = 2^NDIM */
-#define NNEI 8  /* = DIAM^NDIM */
-#elif NDIM == 3
+#define NDIM 3
 #define NDIV 8
-#define NNEI 343
-#endif
-
 #define EPS 0.00000001
 
 #include "linalg.h"
@@ -184,7 +174,6 @@ public:
     OctreeEdge(OctreePoint *new_p1, OctreePoint *new_p2);
 };
 
-#define EDGES_PER_VERTEX  (NNEI/3)
 /*
  * =====================================================================================
  *        Class:  OctreeGraph
@@ -304,5 +293,12 @@ typedef basic_nullbuf<wchar_t> wnullbuf;
 extern std::ostream cnull;
 extern std::wostream wcnull;
 
+// GLOBAL VARIABLES
+extern double lims[6];
+extern int depth;
+extern int FOOT; /* Radius of footprint */
+extern int DIAM;
+extern int NNEI;
+extern double COVAR_SIGMA;
 
 #endif

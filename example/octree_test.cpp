@@ -4,10 +4,9 @@
 #include <ctime>
 #include <iostream>
 
-#undef NDEBUG
-#include <assert.h>
 #include <cmath>
 #include <sstream>
+#include "globals.h"
 #include "pcd_io.h"
 #include "visualize.h"
 
@@ -15,14 +14,10 @@ using namespace std;
 
 int visualize(vector<string> filenames);
 
-vector<int> previous;
-double  lims[]              = {-1,1, -1,1, -1,1};
-int depth = 10;
-
-
 int main(){
+    parse_globals("default.cfg");
 
-    Octree tree(lims, depth); // stores points, builds mesh
+    Octree tree(lims, DEPTH); // stores points, builds mesh
     OctreeGraph graph;  // Tree iterator - Keeps a list of nodes and edges
     if(!load_points_from_pxx("bun180.ply", tree, graph))
         return -1;

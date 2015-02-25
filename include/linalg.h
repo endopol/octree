@@ -26,17 +26,18 @@
  * =====================================================================================
  */
 
-template <typename T1, typename T2>
-float gauss(const T1 x[NDIM], T2 sigma){    
-    return exp(-norm2(x)/(2*sigma*sigma));
-}
 
 template <typename T>
 float norm2(const T v[NDIM]){
     double sum = 0;
     for(int i=0; i<NDIM; i++)
         sum += v[i]*v[i];
-    return sqrt(sum + EPS);
+    return sum;
+}
+
+template <typename T1, typename T2>
+float gauss(const T1 x[NDIM], T2 sigma){    
+    return exp(-norm2(x)/(2*sigma*sigma));
 }
 
 template <typename T1, typename T2>
@@ -45,7 +46,7 @@ double lanczos(const T1 A[NDIM][NDIM], T2 b[NDIM], int niter){
 
     for(int n=0; n<niter; n++){
 
-        b_n = norm2(b);
+        b_n = sqrt(norm2(b));
 
         double temp[NDIM];
         for(int i = 0; i<NDIM; i++){
