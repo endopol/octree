@@ -10,4 +10,4 @@ lib/octree.a: lib/coded_point.o lib/octree_point.o lib/octree.o lib/octree_graph
 	cd lib && ar rcs octree.a coded_point.o octree_point.o octree.o octree_graph.o
 
 clean:
-	rm -f lib/*
+	rm -rf lib
