@@ -1,7 +1,6 @@
 all:
 	cd src && make	
 	make lib
-	mv src/*.o lib
 	make lib/octree.a
 
 lib:
