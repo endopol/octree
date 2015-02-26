@@ -15,11 +15,15 @@ using namespace std;
 int visualize(vector<string> filenames);
 
 int main(){
+    // GLOBAL VARIABLES
+    extern int DEPTH;
+    extern double LIMS[6];
+    extern vector<string> PLY_NAMES;
     parse_globals("default.cfg");
 
-    Octree tree(lims, DEPTH); // stores points, builds mesh
+    Octree tree(LIMS, DEPTH); // stores points, builds mesh
     OctreeGraph graph;  // Tree iterator - Keeps a list of nodes and edges
-    if(!load_points_from_pxx("bun180.ply", tree, graph))
+    if(!load_points_from_pxx(PLY_NAMES[0].c_str(), tree, graph))
         return -1;
     graph.computeNormals();
 
@@ -46,7 +50,7 @@ int visualize(vector<string> filenames){
     ostringstream os("meshlab ");
     os << "meshlab ";
     //     for(int i=0; i<filenames.size(); i++)
-    os << filenames.back() << " >/dev/null 2>/dev/null";
+    os << filenames.back() << " >/dev/null 2>/dev/null &";
     cout<<"About to run command: "<<os.str()<<endl;
     return system(os.str().c_str());
 }

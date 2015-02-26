@@ -147,7 +147,7 @@ public:
 
 private:
     void findNeighbors(OctreeGraph &graph);
-    void computeCovariance(double cov[NDIM][NDIM]);
+    void computeCovariance(double cov[NDIM][NDIM], double sigma);
     void computeNormal();
 };
 
@@ -294,8 +294,6 @@ extern std::ostream cnull;
 extern std::wostream wcnull;
 
 // GLOBAL VARIABLES
-extern double lims[6];
-extern int depth;
 extern int FOOT; /* Radius of footprint */
 extern int DIAM;
 extern int NNEI;
