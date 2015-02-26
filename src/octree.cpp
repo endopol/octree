@@ -16,6 +16,7 @@
  * =====================================================================================
  */
 #include "octree.h"
+#include <float.h>
 #include <iomanip>
 using namespace std;
 
@@ -65,8 +66,7 @@ Octree::Octree(const double *new_limits, int new_max_depth)
  */
 Octree::Octree(const PointIter new_begin, const PointIter new_end, Octree *new_parent,
                codestring new_address, vector<OctreePoint*>& new_points)
-{
-
+{    
     /* Position on the tree */
     parent = new_parent;
     max_depth = parent->max_depth;
@@ -143,9 +143,31 @@ Octree::~Octree()
  * Description:  Add new points to the tree
  *--------------------------------------------------------------------------------------
  */
+
+void findLimits(const double* points, int num_points, double* limits){
+    for(int j=0; j<NDIM; j++){
+        limits[2*j]=DBL_MAX;
+        limits[2*j+1]=-DBL_MAX;
+    }
+
+    for(int i=0; i<num_points; i++){
+        for(int j=0; j<NDIM; j++){
+            int index = i*NDIM+j;
+
+            if(points[index]<limits[2*j])
+                limits[2*j] = points[index];
+            if(points[index]>limits[2*j+1])
+                limits[2*j+1] = points[index];
+        }
+    }
+}
+
 void Octree::addPoints(const double *new_points, const float *new_normals,
                        int num_points, OctreeGraph &graph)
 {
+    if(isZero(limits, 2*NDIM))
+        findLimits(new_points, num_points, limits);
+
     //Find num valid points to add
     int numValid = 0;
 

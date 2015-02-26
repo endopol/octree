@@ -12,7 +12,7 @@ using namespace std;
 
 // #### VARIABLES DECLARED HERE
 vector<string> PLY_NAMES;
-double LIMS[6] = {-1,1, -1,1, -1,1};
+double LIMS[6] = {0,0, 0,0, 0,0};
 int DEPTH = 10;
 
 int FOOT = 2, DIAM, NNEI;
@@ -76,6 +76,9 @@ void parse_globals(const char* filename){
 	ifstream infile(filename);
     parse_stream(infile);
     infile.close();
+}
+bool is_defined(string varname){
+	return options.find(varname)!=options.end();
 }
 
 

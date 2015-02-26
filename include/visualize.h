@@ -91,7 +91,7 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
     {
         double normal_length = 0;
         if(vertices.size()>0) 
-            normal_length = 10/((double)(1<<vertices[0]->getDepth()));
+            normal_length = 1/((double)(1<<vertices[0]->getDepth()));
 
         cout << "adding normals: \n";
         for (unsigned int i = 0; i < vertices.size(); i++)

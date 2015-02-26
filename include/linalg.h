@@ -168,6 +168,14 @@ double gain(T1 mat[NDIM][NDIM], T2 v[NDIM]){
     return sqrt(total);
 }
 
+template <typename T> 
+bool isZero(T* v, int numel){
+    for(int i=0; i<numel; i++)
+        if(v[i]!=0)
+            return false;
+        
+    return true;
+}
 
 /*
  * ===  FUNCTION  ======================================================================
