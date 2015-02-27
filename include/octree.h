@@ -119,6 +119,7 @@ class OctreePoint
     friend vector<double> dist_from(OctreePoint *start, OctreeGraph &graph, vector<int> &previous);
     friend OctreePoint* searchVector(const vector<OctreePoint*>& v, codestring c);
 public:
+    int debug_label;
     int color[3];
 
     OctreePoint();
