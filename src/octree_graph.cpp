@@ -133,8 +133,10 @@ void OctreeGraph::fixNormals(OctreePoint *start, vector<float> &total_turn)
 
 void OctreeGraph::computeNormals()
 {
+    TIC("Computing normals: ")    
     for (unsigned int i = 0; i < vertices.size(); i++)
         vertices[i]->computeNormal();
+    TOC
 
     return;
 

@@ -34,6 +34,7 @@ using namespace std;
 #define NDIM 3
 #define NDIV 8
 #define EPS 0.00000001
+#define PI 3.14159
 
 #include "linalg.h"
 
@@ -120,7 +121,7 @@ class OctreePoint
     friend OctreePoint* searchVector(const vector<OctreePoint*>& v, codestring c);
 public:
     int debug_label;
-    int color[3];
+    unsigned int color[3];
 
     OctreePoint();
     OctreePoint(codestring new_address);
@@ -284,6 +285,22 @@ struct basic_nullbuf : std::basic_streambuf<Ch, Traits>
         return traits_type::not_eof(c);
     }
 };
+
+// macro for timing
+#define TIC(MESSAGE) {                  \
+cout << MESSAGE;                        \
+cout.flush();                           \
+clock_t TIC_TIME = clock();
+
+#define TOC                                                                                         \
+cout << "DONE";                                                                                     \
+cout << " (" << (int)((clock() - TIC_TIME) * (((double) 1000) / CLOCKS_PER_SEC)) << "ms).\n"; }
+
+template<typename T>
+T ternary(bool test, T t1, T t2){
+    if(test) return t1;
+    else return t2;
+}
 
 // convenient typedefs
 typedef basic_nullbuf<char> nullbuf;

@@ -5,20 +5,13 @@
 #include <iomanip>
 #include <fstream>
 
-const double colours[12][3] =
+const double colours[5][3] =
 {
     {  1,   0,   0},
-    {.75, .25,   0},
-    { .5,  .5,   0},
-    {.25, .75,   0},
-    {  0,   1,   0},
-    {  0, .75, .25},
+    { .5,  .5,   0},    
+    {  0,   1,   0},    
     {  0,  .5,  .5},
-    {  0, .25, .75},
-    {  0,   0,   1},
-    {.25,   0, .75},
-    { .5,   0,  .5},
-    {.75,   0, .25},
+    {  0,   0,   1},    
 };
 
 // ######################################################################
@@ -93,7 +86,6 @@ void outputVisualization(OctreeGraph &graph, int imnum, const char *outfile)
         if(vertices.size()>0) 
             normal_length = 1/((double)(1<<vertices[0]->getDepth()));
 
-        cout << "adding normals: \n";
         for (unsigned int i = 0; i < vertices.size(); i++)
         {
             const double *location;
@@ -159,19 +151,15 @@ void rainbow(float r, unsigned int *color)
         }
         return;
     }
+    r = fmax(0, fmin(1, r))*5;
 
-    int r0 = ((int) floor(r)) % 12, r1 = (r0 + 1) % 12;
+    int r0 = ((int) floor(r)) % 5, r1 = (r0 + 1) % 5;
     float rf = r - floor(r);
 
     //cout << r0 << " " << rf << " " << r1 << endl;
     for (int i = 0; i < 3; i++)
         color[i] = (unsigned int) ((1 - rf) * 255 * colours[r0][i]
                                    + rf * 255 * colours[r1][i]);
-    // for(int i=0; i<3; i++)
-    //         color[i] = (unsigned int) colours[(int)r][i];
-
-    // cout<<"GOT COLOR: "<<r<<" and set: "<<color[0] <<" "<<color[1]<<" "<<color[2]<<endl;
-
 }
 
 #endif // VISUALIZE_H

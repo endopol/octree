@@ -30,9 +30,9 @@ int main(){
     // Color vertices by their normal direction
     for(int i=0; i<graph.getNumVertices(); i++){
         const float* normal = graph.getVertex(i)->getNormal();
-        int* color = graph.getVertex(i)->color;
-        for(int j=0; j<3; j++)
-            color[j] = (int) 255*normal[j];
+        unsigned int* color = graph.getVertex(i)->color;
+        for(int j=0; j<NDIM; j++)
+            color[j] = 255*normal[j];
     }
 
     /** VIEW OUTPUTS **/
@@ -50,7 +50,7 @@ int visualize(vector<string> filenames){
     ostringstream os("meshlab ");
     os << "meshlab ";
     //     for(int i=0; i<filenames.size(); i++)
-    os << filenames.back() << " >/dev/null 2>/dev/null";
+    os << filenames.back() << " >/dev/null 2>/dev/null &";
     cout<<"About to run command: "<<os.str()<<endl;
     return system(os.str().c_str());
 }

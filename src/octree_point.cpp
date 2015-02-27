@@ -173,33 +173,30 @@ void OctreePoint::findNeighbors(OctreeGraph &graph) {
  * Description:  Computes normal vector based on neighboring points' locations
  *--------------------------------------------------------------------------------------
  */
-const double SIGMA_STEP = 1;
 void OctreePoint::computeNormal() {
     cout.setf(ios::fixed, ios::floatfield);
+    double sigma = COVAR_SIGMA / ((double)(1 << depth));
+    // Covariance matrix
+    double l_mat[NDIM][NDIM];
+    computeCovariance(l_mat, sigma);
 
-    double min_ratio = 1;
-    for (int k = 1; k <= (COVAR_SIGMA / SIGMA_STEP); k++) {
-        double sigma = k * SIGMA_STEP / ((double)(1 << depth));
-        // Covariance matrix
-        double l_mat[NDIM][NDIM];
-        computeCovariance(l_mat, sigma);
+    double trace = 0;
+    for (int i = 0; i < NDIM; i++)
+        trace += l_mat[i][i];
 
-        double v1[NDIM] = {1, 0, 0};
-        double e1 = lanczos(l_mat, v1, 10);
+    double v1[NDIM] = {1, 0, 0};
+    double e1 = lanczos(l_mat, v1, 20);
 
-        for (int i = 0; i < NDIM; i++)
-            l_mat[i][i] -= e1;
+    for (int i = 0; i < NDIM; i++)
+        l_mat[i][i] -= e1;
 
-        double v2[NDIM] = {0, 0, 1};
-        double e2 = lanczos(l_mat, v2, 10);
+    double v3[NDIM] = {0, 0, 1};
+    /*double e3 = e1 + */ lanczos(l_mat, v3, 40);
 
-        double ratio = fabs(e2 / e1);
-        if (ratio < min_ratio) {
-            min_ratio = ratio;
-            scale(v2, 1 / sqrt(norm2(v2)));
-            copyTo(v2, normal);
-        }
-    }
+    // double e2 = trace - e1 - e3;
+    scale(v3, 1 / sqrt(norm2(v3)));
+    copyTo(v3, normal);
+    // cout << "debug_label=" << debug_label << "\n\n";
 
     // cout << "\t" << normal[0] << " " << normal[1] << " " << normal[2] << endl << endl;
 }
@@ -210,34 +207,49 @@ void OctreePoint::computeNormal() {
  *--------------------------------------------------------------------------------------
  */
 void OctreePoint::computeCovariance(double cov[NDIM][NDIM], double sigma) {
+    int nnei = neighbors.size();
+
+    // compute center
+    double ld[NDIM], center[NDIM], total_weight = 1;
+    copyTo(location, center);
+    for (int i = 0; i < nnei; i++) {
+        sub(neighbors[i]->location, location, ld);
+        double weight = gauss(ld, sigma);
+        for (int j = 0; j < NDIM; j++) {
+            center[j] += weight * neighbors[i]->location[j];
+        }
+        total_weight += weight;
+    }
+    for (int j = 0; j < NDIM; j++)
+        center[j] /= total_weight;
+
+    // compute covariance around center
     for (int i = 0; i < NDIM; i++)
         for (int j = 0; j < NDIM; j++)
             cov[i][j] = 0;
-
-    double ld[NDIM];
-    int nnei = neighbors.size();
-    double total_weight = 0;
     for (int k = 0; k < nnei; k++) {
-        double *l1 = neighbors[k]->location;
-
         // Get relative location
-        sub(l1, location, ld);
+        sub(neighbors[k]->location, center, ld);
         double weight = gauss(ld, sigma);
+        scale(ld, 1 << depth);
 
         for (int i = 0; i < NDIM; i++)
-            for (int j = 0; j < NDIM; j++)
-                cov[i][j] += weight * (1 << (depth)) * ld[i] * ld[j];
-
-        total_weight += weight;
+            for (int j = i; j < NDIM; j++)
+                cov[i][j] += weight * ld[i] * ld[j];
     }
-    // cout << "COVAR:\n";
     for (int i = 0; i < NDIM; i++) {
-        for (int j = 0; j < NDIM; j++) {
-            cov[i][j] /= (total_weight * total_weight);
-            // cout << cov[i][j] << " ";
+        for (int j = 0; j < i; j++) {
+            cov[i][j] = cov[j][i];
         }
-        // cout << endl;
     }
+
+    // cout << "COVAR:\n";
+    // for (int i = 0; i < NDIM; i++) {
+    //     for (int j = 0; j < NDIM; j++) {
+    //         cout << cov[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
     // cout << endl;
 }
 

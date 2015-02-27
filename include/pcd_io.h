@@ -202,24 +202,17 @@ bool load_points_from_pxx(const char *filename, Octree &tree, OctreeGraph &graph
     normals = new float[num_points * NDIM]();
 
     // Read points from the file
-    clock_t t1 = clock();
-    cout << "\nReading " << num_points << " points ";
-    if (haveNormals) cout << "(with normals):  "; else cout << "(without normals):  ";
+    TIC("\nReading " << num_points << " points " << ternary(haveNormals, "(with normals): ", "(without normals): "))
     read_points(infile, num_points, num_fields, field_map, points, normals);
-    cout << "DONE";
-    clock_t t2 = clock();
-    cout << " (" << (int)((t2 - t1) * (((double) 1000) / CLOCKS_PER_SEC)) << "ms).\n";
+    TOC    
 
     // Add points to the tree
-    clock_t t3 = clock();
-    cout << "Building tree (depth=" << tree.max_depth << "):  ";
+    TIC("Building tree (depth=" << tree.max_depth << "): ")
     if (haveNormals)
         tree.addPoints(points, normals, num_points, graph);
     else
         tree.addPoints(points, NULL, num_points, graph);
-    cout << "DONE";
-    clock_t t4 = clock();
-    cout << " (" << (int)((t4 - t3) * (((double) 1000) / CLOCKS_PER_SEC)) << "ms).\n";
+    TOC
     cout << "New tree has " << graph.getNumVertices() << " leaf-nodes and " << graph.getNumEdges() << " edges.\n";
 
 
