@@ -99,6 +99,8 @@ typedef PointBuffer::iterator PointIter;
  *  Description:  Accumulates a history of CodedPoints and
  * =====================================================================================
  */
+typedef float (*DistFunction)(const OctreePoint*, const OctreePoint*);
+float point_distance(const OctreePoint *p1, const OctreePoint *p2);
 class OctreePoint
 {
     Octree *home;
@@ -116,8 +118,9 @@ class OctreePoint
     friend class OctreeEdge;
     friend class OctreeGraph;
     friend ostream &operator<<(ostream &out, const OctreePoint &p);
+ 
     friend float point_distance(const OctreePoint *p1, const OctreePoint *p2);
-    friend vector<double> dist_from(OctreePoint *start, OctreeGraph &graph, vector<int> &previous);
+    friend vector<double> dist_from(OctreePoint *start, OctreeGraph &graph, vector<int> &previous, DistFunction df, double  MAX_DIST);
     friend OctreePoint* searchVector(const vector<OctreePoint*>& v, codestring c);
 public:
     int debug_label;
@@ -133,7 +136,7 @@ public:
 
     // Accessor methods
     codestring getAddress() const;
-    vector<OctreePoint*> getNeighbors();
+    vector<OctreePoint*>& getNeighbors();
     OctreePoint *getNeighbor(int i) const;
     OctreePoint* getNeighbor(const int relative_coords[3]) const;    
     int getIndex() const;

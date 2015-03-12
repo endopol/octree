@@ -260,7 +260,7 @@ codestring OctreePoint::getAddress() const {
     return address;
 }
 
-vector<OctreePoint *> OctreePoint::getNeighbors() {
+vector<OctreePoint *>& OctreePoint::getNeighbors() {
     return neighbors;
 }
 

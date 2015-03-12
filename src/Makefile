@@ -4,7 +4,7 @@ DEBUG=-g
 RELEASE=-O4 -DNDebug
 FLAGS=-std=c++0x -Wall -pedantic $(RELEASE) -I$(INCLUDE_DIR)
 
-all: ../lib/coded_point.o ../lib/octree_point.o ../lib/octree.o ../lib/octree_graph.o
+all: ../lib/coded_point.o ../lib/octree_point.o ../lib/octree.o ../lib/octree_graph.o ../lib/graph_traverse.o
 
 ../lib/coded_point.o: $(HEADERS) coded_point.cpp
 	g++ -c $(FLAGS) coded_point.cpp
@@ -21,3 +21,7 @@ all: ../lib/coded_point.o ../lib/octree_point.o ../lib/octree.o ../lib/octree_gr
 ../lib/octree_graph.o: $(HEADERS) octree_graph.cpp
 	g++ -c $(FLAGS) octree_graph.cpp
 	mv octree_graph.o ../lib
+
+../lib/graph_traverse.o: $(HEADERS) graph_traverse.cpp
+	g++ -c $(FLAGS) graph_traverse.cpp
+	mv graph_traverse.o ../lib	
